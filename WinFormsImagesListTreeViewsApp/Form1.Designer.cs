@@ -32,8 +32,6 @@
             filesLargeImageList = new ImageList(components);
             dirListView = new ListView();
             filesSmallImageList = new ImageList(components);
-            pathTextBox = new TextBox();
-            viewDirButton = new Button();
             button1 = new Button();
             viewModeGroupBox = new GroupBox();
             vmLargeIconRadioButton = new RadioButton();
@@ -54,9 +52,9 @@
             // 
             dirListView.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point);
             dirListView.LargeImageList = filesLargeImageList;
-            dirListView.Location = new Point(344, 65);
+            dirListView.Location = new Point(344, 12);
             dirListView.Name = "dirListView";
-            dirListView.Size = new Size(488, 373);
+            dirListView.Size = new Size(488, 426);
             dirListView.SmallImageList = filesSmallImageList;
             dirListView.TabIndex = 2;
             dirListView.UseCompatibleStateImageBehavior = false;
@@ -66,25 +64,6 @@
             filesSmallImageList.ColorDepth = ColorDepth.Depth8Bit;
             filesSmallImageList.ImageSize = new Size(32, 32);
             filesSmallImageList.TransparentColor = Color.Transparent;
-            // 
-            // pathTextBox
-            // 
-            pathTextBox.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point);
-            pathTextBox.Location = new Point(344, 13);
-            pathTextBox.Name = "pathTextBox";
-            pathTextBox.Size = new Size(488, 32);
-            pathTextBox.TabIndex = 3;
-            // 
-            // viewDirButton
-            // 
-            viewDirButton.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point);
-            viewDirButton.Location = new Point(898, 12);
-            viewDirButton.Name = "viewDirButton";
-            viewDirButton.Size = new Size(171, 32);
-            viewDirButton.TabIndex = 4;
-            viewDirButton.Text = "View Directory";
-            viewDirButton.UseVisualStyleBackColor = true;
-            viewDirButton.Click += viewDirButton_Click;
             // 
             // button1
             // 
@@ -103,7 +82,7 @@
             viewModeGroupBox.Controls.Add(vmSmallIconRadioButton);
             viewModeGroupBox.Controls.Add(vmListRadioButton);
             viewModeGroupBox.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point);
-            viewModeGroupBox.Location = new Point(869, 65);
+            viewModeGroupBox.Location = new Point(851, 12);
             viewModeGroupBox.Name = "viewModeGroupBox";
             viewModeGroupBox.Size = new Size(200, 196);
             viewModeGroupBox.TabIndex = 6;
@@ -165,6 +144,8 @@
             dirsTreeView.Name = "dirsTreeView";
             dirsTreeView.Size = new Size(311, 426);
             dirsTreeView.TabIndex = 7;
+            dirsTreeView.AfterExpand += dirsTreeView_AfterExpand;
+            dirsTreeView.BeforeSelect += dirsTreeView_BeforeSelect;
             // 
             // MainForm
             // 
@@ -174,8 +155,6 @@
             Controls.Add(dirsTreeView);
             Controls.Add(viewModeGroupBox);
             Controls.Add(button1);
-            Controls.Add(viewDirButton);
-            Controls.Add(pathTextBox);
             Controls.Add(dirListView);
             Name = "MainForm";
             Text = "Explower";
@@ -183,15 +162,12 @@
             viewModeGroupBox.ResumeLayout(false);
             viewModeGroupBox.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
         private ImageList filesLargeImageList;
         private ListView dirListView;
-        private TextBox pathTextBox;
-        private Button viewDirButton;
         private Button button1;
         private GroupBox viewModeGroupBox;
         private RadioButton vmListRadioButton;

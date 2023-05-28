@@ -42,35 +42,35 @@ namespace WinFormsImagesListTreeViewsApp
 
         }
 
-        private void viewDirButton_Click(object sender, EventArgs e)
-        {
-            dirListView.Items.Clear();
+        //private void viewDirButton_Click(object sender, EventArgs e)
+        //{
+        //    dirListView.Items.Clear();
 
-            string path = pathTextBox.Text;
+        //    string path = pathTextBox.Text;
 
-            string[] dirs = Directory.GetDirectories(path);
-            foreach (string dir in dirs)
-            {
-                ListViewItem item = new ListViewItem();
-                item.Text = dir.Remove(0, dir.LastIndexOf('\\') + 1);
-                item.ImageIndex = fileTypes["folder"]; ;
-                dirListView.Items.Add(item);
-            }
+        //    string[] dirs = Directory.GetDirectories(path);
+        //    foreach (string dir in dirs)
+        //    {
+        //        ListViewItem item = new ListViewItem();
+        //        item.Text = dir.Remove(0, dir.LastIndexOf('\\') + 1);
+        //        item.ImageIndex = fileTypes["folder"]; ;
+        //        dirListView.Items.Add(item);
+        //    }
 
-            string[] files = Directory.GetFiles(path);
-            foreach (string file in files)
-            {
-                ListViewItem item = new ListViewItem();
-                item.Text = file.Remove(0, file.LastIndexOf('\\') + 1);
+        //    string[] files = Directory.GetFiles(path);
+        //    foreach (string file in files)
+        //    {
+        //        ListViewItem item = new ListViewItem();
+        //        item.Text = file.Remove(0, file.LastIndexOf('\\') + 1);
 
-                string ext = file.Substring(file.LastIndexOf('.') + 1);
-                if (fileTypes.ContainsKey(ext))
-                    item.ImageIndex = fileTypes[ext];
-                else
-                    item.ImageIndex = fileTypes["file"];
-                dirListView.Items.Add(item);
-            }
-        }
+        //        string ext = file.Substring(file.LastIndexOf('.') + 1);
+        //        if (fileTypes.ContainsKey(ext))
+        //            item.ImageIndex = fileTypes[ext];
+        //        else
+        //            item.ImageIndex = fileTypes["file"];
+        //        dirListView.Items.Add(item);
+        //    }
+        //}
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -116,7 +116,7 @@ namespace WinFormsImagesListTreeViewsApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
             }
         }
 
@@ -134,7 +134,88 @@ namespace WinFormsImagesListTreeViewsApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
+            }
+        }
+
+        void ReadDirList(string path)
+        {
+            dirListView.Items.Clear();
+
+            string[] dirs = Directory.GetDirectories(path);
+            foreach (string dir in dirs)
+            {
+                ListViewItem item = new ListViewItem();
+                item.Text = dir.Remove(0, dir.LastIndexOf('\\') + 1);
+                item.ImageIndex = fileTypes["folder"]; ;
+                dirListView.Items.Add(item);
+            }
+
+            string[] files = Directory.GetFiles(path);
+            foreach (string file in files)
+            {
+                ListViewItem item = new ListViewItem();
+                item.Text = file.Remove(0, file.LastIndexOf('\\') + 1);
+
+                string ext = file.Substring(file.LastIndexOf('.') + 1);
+                if (fileTypes.ContainsKey(ext))
+                    item.ImageIndex = fileTypes[ext];
+                else
+                    item.ImageIndex = fileTypes["file"];
+                dirListView.Items.Add(item);
+            }
+        }
+
+        private void dirsTreeView_BeforeSelect(object sender, TreeViewCancelEventArgs e)
+        {
+            e.Node.Nodes.Clear();
+            string[] dirs;
+            try
+            {
+                if (Directory.Exists(e.Node.FullPath))
+                {
+                    dirs = Directory.GetDirectories(e.Node.FullPath);
+                    if (dirs.Length > 0)
+                    {
+                        foreach (string dir in dirs)
+                        {
+                            TreeNode nodeDir = new(new DirectoryInfo(dir).Name);
+                            ReadDirectory(nodeDir, dir);
+                            e.Node.Nodes.Add(nodeDir);
+                        }
+                    }
+                    ReadDirList(e.Node.FullPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void dirsTreeView_AfterExpand(object sender, TreeViewEventArgs e)
+        {
+            e.Node.Nodes.Clear();
+            string[] dirs;
+            try
+            {
+                if (Directory.Exists(e.Node.FullPath))
+                {
+                    dirs = Directory.GetDirectories(e.Node.FullPath);
+                    if (dirs.Length > 0)
+                    {
+                        foreach (string dir in dirs)
+                        {
+                            TreeNode nodeDir = new(new DirectoryInfo(dir).Name);
+                            ReadDirectory(nodeDir, dir);
+                            e.Node.Nodes.Add(nodeDir);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
             }
         }
     }
